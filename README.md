@@ -29,3 +29,17 @@ The current baseline is a naive 3-loop $O(N^3)$ implementation.
 - [ ] Implement **Blocked (Tiled) MatMul** to exploit L1/L2 cache locality.
 - [ ] Implement **SIMD (AVX2/FMA)** kernels.
 - [ ] Comparison between Row-Major and Column-Major layouts.
+
+## 🚀 Performance Comparison: Naive vs. Blocked
+
+The following data was collected using `GCC -O3 -march=native` on a $2048 \times 2048$ Matrix Multiplication.
+
+| Implementation | Execution Time | GFLOPS | Speedup |
+| :--- | :--- | :--- | :--- |
+| **Naive** | 125.16s | 0.14 | 1.0x |
+| **Blocked (32x32)** | 9.04s | 1.90 | **13.8x** |
+
+### 💡 Key Insight
+The **Naive** version suffers from a "Memory Wall." As the matrix size exceeds the CPU cache (L1/L2/L3), the CPU spends most of its time waiting for data to arrive from the DRAM. 
+
+The **Blocked** version keeps small $32 \times 32$ "tiles" in the L1 cache, allowing each piece of data to be reused 32 times before being swapped out. This transforms a memory-bound problem into a compute-bound one.
