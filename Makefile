@@ -1,6 +1,6 @@
 CC = gcc
-CFLAGS = -O3 -march=native -Wall -Wextra -g -I.
-LDFLAGS = -lm
+CFLAGS = -O3 -march=native -Wall -Wextra -g -I. -fopenmp
+LDFLAGS = -lm -fopenmp
 
 OBJ_DIR = obj
 BIN_DIR = bin
@@ -14,7 +14,7 @@ MATMUL_BLOCK_SRC = $(SRC_DIR)/matmul/matmul_block.c
 BENCH_SRC = $(BENCH_SRC_DIR)/bench-matmul.c
 
 # Object files
-OBJS = $(OBJ_DIR)/timer.o $(OBJ_DIR)/matmul_naive.o $(OBJ_DIR)/matmul_block.o $(OBJ_DIR)/matmul_simd.o
+OBJS = $(OBJ_DIR)/timer.o $(OBJ_DIR)/matmul_naive.o $(OBJ_DIR)/matmul_block.o $(OBJ_DIR)/matmul_simd.o $(OBJ_DIR)/matmul_openmp.o
 TARGET = $(BIN_DIR)/bench-matmul.exe
 
 all: $(TARGET)
@@ -38,6 +38,10 @@ $(OBJ_DIR)/matmul_block.o: $(SRC_DIR)/matmul/matmul_block.c
 
 
 $(OBJ_DIR)/matmul_simd.o: $(SRC_DIR)/matmul/matmul_simd.c
+	if not exist $(OBJ_DIR) mkdir $(OBJ_DIR)
+	$(CC) $(CFLAGS) -c $< -o $@
+
+$(OBJ_DIR)/matmul_openmp.o: $(SRC_DIR)/matmul/matmul_openmp.c
 	if not exist $(OBJ_DIR) mkdir $(OBJ_DIR)
 	$(CC) $(CFLAGS) -c $< -o $@
 

@@ -53,3 +53,17 @@ The following benchmarks were conducted on a Windows machine using `gcc -O3 -mar
 | **Naive (Baseline)** | 2048 | 125.16 | 0.14 | 1.0x |
 | **Blocked (32x32)** | 2048 | 9.04 | 1.90 | **13.8x** |
 | **SIMD (AVX2)** | 2048 | *Coming Soon* | *Coming Soon* | -- |
+
+## 🏆 Final Performance Roadmap
+
+| Implementation | $N=2048$ Time | $N=2048$ GFLOPS | Peak GFLOPS | Optimization Strategy |
+| :--- | :--- | :--- | :--- | :--- |
+| **Naive** | 98.29s | 0.17 | 2.50 | None (Scalar) |
+| **Blocked** | 5.34s | 3.22 | 3.22 | Cache Locality |
+| **SIMD** | 1.51s | 11.38 | 12.18 | Vectorization (AVX2) |
+| **OpenMP** | 1.51s | 11.38 | **34.46** | Multi-core Parallelism |
+
+### 🚀 Key Takeaways
+- **SIMD** provided the most consistent boost across all sizes.
+- **OpenMP** is a beast for medium-sized matrices but is eventually limited by system memory bandwidth at very large sizes.
+- **Optimization is a journey:** We improved performance from 0.17 GFLOPS to a peak of 34.46 GFLOPS—a **202x increase** in raw throughput.

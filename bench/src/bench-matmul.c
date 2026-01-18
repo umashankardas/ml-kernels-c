@@ -71,11 +71,20 @@ int main(int argc, char** argv) {
     double t_simd = e3 - s3;
     log_to_csv("simd_O3", M, N, K, t_simd);
 
+    // --- 4. OpenMP Benchmark ---
+    matmul_openmp(A, B, C_test, M, N, K); // Warmup
+    double s4 = now_seconds();
+    matmul_openmp(A, B, C_test, M, N, K);
+    double e4 = now_seconds();
+    double t_openmp = e4 - s4;
+    log_to_csv("openmp_O3", M, N, K, t_openmp);
+
     // --- Results ---
     if (verify(C_ref, C_test, M * N)) {
         printf("  Naive:   %.4f s\n", t_naive);
         printf("  Blocked: %.4f s (Speedup: %.2fx)\n", t_block, t_naive / t_block);
         printf("  SIMD:    %.4f s (Speedup: %.2fx)\n", t_simd, t_naive / t_simd);
+        printf("  OpenMP:  %.4f s (Speedup: %.2fx)\n", t_openmp, t_naive / t_openmp);
     }
 
     _aligned_free(A); _aligned_free(B); _aligned_free(C_ref); _aligned_free(C_test);
