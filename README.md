@@ -43,3 +43,13 @@ The following data was collected using `GCC -O3 -march=native` on a $2048 \times
 The **Naive** version suffers from a "Memory Wall." As the matrix size exceeds the CPU cache (L1/L2/L3), the CPU spends most of its time waiting for data to arrive from the DRAM. 
 
 The **Blocked** version keeps small $32 \times 32$ "tiles" in the L1 cache, allowing each piece of data to be reused 32 times before being swapped out. This transforms a memory-bound problem into a compute-bound one.
+
+## 📊 Performance Results
+
+The following benchmarks were conducted on a Windows machine using `gcc -O3 -march=native`.
+
+| Implementation | Matrix Size ($N$) | Execution Time (s) | Throughput (GFLOPS) | Speedup |
+| :--- | :--- | :--- | :--- | :--- |
+| **Naive (Baseline)** | 2048 | 125.16 | 0.14 | 1.0x |
+| **Blocked (32x32)** | 2048 | 9.04 | 1.90 | **13.8x** |
+| **SIMD (AVX2)** | 2048 | *Coming Soon* | *Coming Soon* | -- |
