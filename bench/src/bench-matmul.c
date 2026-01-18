@@ -63,10 +63,19 @@ int main(int argc, char** argv) {
     double t_block = e2 - s2;
     log_to_csv("blocked_O3", M, N, K, t_block);
 
+    // --- 3. SIMD Benchmark ---
+    matmul_simd(A, B, C_test, M, N, K); // Warmup
+    double s3 = now_seconds();
+    matmul_simd(A, B, C_test, M, N, K);
+    double e3 = now_seconds();
+    double t_simd = e3 - s3;
+    log_to_csv("simd_O3", M, N, K, t_simd);
+
     // --- Results ---
     if (verify(C_ref, C_test, M * N)) {
         printf("  Naive:   %.4f s\n", t_naive);
         printf("  Blocked: %.4f s (Speedup: %.2fx)\n", t_block, t_naive / t_block);
+        printf("  SIMD:    %.4f s (Speedup: %.2fx)\n", t_simd, t_naive / t_simd);
     }
 
     _aligned_free(A); _aligned_free(B); _aligned_free(C_ref); _aligned_free(C_test);

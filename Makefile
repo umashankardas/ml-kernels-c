@@ -14,7 +14,7 @@ MATMUL_BLOCK_SRC = $(SRC_DIR)/matmul/matmul_block.c
 BENCH_SRC = $(BENCH_SRC_DIR)/bench-matmul.c
 
 # Object files
-OBJS = $(OBJ_DIR)/timer.o $(OBJ_DIR)/matmul_naive.o $(OBJ_DIR)/matmul_block.o
+OBJS = $(OBJ_DIR)/timer.o $(OBJ_DIR)/matmul_naive.o $(OBJ_DIR)/matmul_block.o $(OBJ_DIR)/matmul_simd.o
 TARGET = $(BIN_DIR)/bench-matmul.exe
 
 all: $(TARGET)
@@ -33,6 +33,11 @@ $(OBJ_DIR)/matmul_naive.o: $(SRC_DIR)/matmul/matmul_naive.c
 
 # --- ADDED THIS RULE ---
 $(OBJ_DIR)/matmul_block.o: $(SRC_DIR)/matmul/matmul_block.c
+	if not exist $(OBJ_DIR) mkdir $(OBJ_DIR)
+	$(CC) $(CFLAGS) -c $< -o $@
+
+
+$(OBJ_DIR)/matmul_simd.o: $(SRC_DIR)/matmul/matmul_simd.c
 	if not exist $(OBJ_DIR) mkdir $(OBJ_DIR)
 	$(CC) $(CFLAGS) -c $< -o $@
 
