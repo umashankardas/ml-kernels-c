@@ -16,9 +16,10 @@ MATMUL_SIMD_SRC = $(SRC_DIR)/matmul/matmul_simd.c
 MATMUL_OPENMP_SRC = $(SRC_DIR)/matmul/matmul_openmp.c
 LINEAR_SIMD_SRC = $(SRC_DIR)/matmul/linear_simd.c
 LINEAR_OPENMP_SRC = $(SRC_DIR)/matmul/linear_openmp.c
+RELU_SRC = $(SRC_DIR)/activations/relu.c
 
 # Object files
-OBJS = $(OBJ_DIR)/timer.o $(OBJ_DIR)/matmul_naive.o $(OBJ_DIR)/matmul_block.o $(OBJ_DIR)/matmul_simd.o $(OBJ_DIR)/matmul_openmp.o $(OBJ_DIR)/linear_simd.o $(OBJ_DIR)/linear_openmp.o
+OBJS = $(OBJ_DIR)/timer.o $(OBJ_DIR)/matmul_naive.o $(OBJ_DIR)/matmul_block.o $(OBJ_DIR)/matmul_simd.o $(OBJ_DIR)/matmul_openmp.o $(OBJ_DIR)/linear_simd.o $(OBJ_DIR)/linear_openmp.o $(OBJ_DIR)/relu.o $(OBJ_DIR)/linear_relu_fused.o
 TARGET = $(BIN_DIR)/bench-matmul.exe
 
 all: $(TARGET)
@@ -54,6 +55,14 @@ $(OBJ_DIR)/linear_simd.o: $(SRC_DIR)/matmul/linear_simd.c
 	$(CC) $(CFLAGS) -c $< -o $@
 
 $(OBJ_DIR)/linear_openmp.o: $(SRC_DIR)/matmul/linear_openmp.c
+	if not exist $(OBJ_DIR) mkdir $(OBJ_DIR)
+	$(CC) $(CFLAGS) -c $< -o $@
+
+$(OBJ_DIR)/relu.o: $(SRC_DIR)/activations/relu.c
+	if not exist $(OBJ_DIR) mkdir $(OBJ_DIR)
+	$(CC) $(CFLAGS) -c $< -o $@
+
+$(OBJ_DIR)/linear_relu_fused.o: $(SRC_DIR)/matmul/linear_relu_fused.c
 	if not exist $(OBJ_DIR) mkdir $(OBJ_DIR)
 	$(CC) $(CFLAGS) -c $< -o $@
 

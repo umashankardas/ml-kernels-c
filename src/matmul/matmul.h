@@ -20,4 +20,9 @@ void linear_layer_simd(const float* A, const float* B, const float* bias, float*
 
 void linear_layer_openmp(const float* A, const float* B, const float* bias, float* C, int M, int N, int K);
 
+void relu_naive(float* data, int size);
+void relu_simd(float* data, int size);
+
+void linear_relu_fused_openmp(const float* A, const float* B, const float* bias, float* C, int M, int N, int K);
+
 #endif
