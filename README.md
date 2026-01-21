@@ -53,6 +53,53 @@ Our `linear_relu_fused` kernel performs $(A \times B) + Bias$ and then applies $
 - [x] **Activation Kernels** - SIMD-accelerated ReLU.
 - [x] **Fused Linear-ReLU** - End-to-end optimized layer.
 
-## 🏗️ Next Steps
-- [ ] Implement **Conv2D** (Convolutional) kernels.
-- [ ] Build a **2-Layer MLP Forward Pass** using the existing library.
+# ml-kernels-c 🧱
+
+High-performance AI/ML computational kernels written in C, optimized for modern CPU architectures.
+
+## 🏆 Performance Milestone: Stable Diffusion Simulation
+We successfully simulated a 30-step inference pass (UNet workload) for a 512x512 image generation (64x64x320 Latent Space).
+
+| Operation | Naive Implementation | Optimized (GEMM/OpenMP) | Speedup |
+| :--- | :--- | :--- | :--- |
+| **Conv2D** | 720.05 ms | **323.61 ms** | 2.2x |
+| **Transposed Conv** | 9611.62 ms | **359.24 ms** | **26.7x** |
+| **Total 30-Step Gen** | ~310 seconds | **23.31 seconds** | **13.3x** |
+
+---
+
+## 💡 Spatial Kernel Engineering
+
+### 1. Fast Convolution (im2col + MatMul)
+By transforming the "sliding window" convolution into a matrix problem, we leverage our 85 GFLOPS MatMul engine. This removes the overhead of nested loops and maximizes L1/L2 cache hits.
+
+
+
+### 2. Transposed Convolution (Upscaling)
+The "Naive" version used an atomic "stamping" logic that caused massive CPU cache thrashing. Our optimized version uses a GEMM-based approach combined with a `col2im` accumulation step, which brought execution time down from **9.6 seconds to 0.3 seconds**.
+
+
+
+---
+
+## 🛠️ Project Structure
+- `src/conv/`: im2col, Fast/Naive Conv2D, Transposed Conv, and col2im.
+- `src/matmul/`: SIMD (AVX2), OpenMP, and Fused Linear-ReLU kernels.
+- `src/activations/`: Max-Pooling, Softmax, and ReLU.
+- `bench/src/`: Full Stable Diffusion simulation pass (`sim-sd-full.c`).
+
+---
+
+## 🚀 Roadmap
+- [x] **Optimized MatMul Suite** (SIMD + Multi-threading).
+- [x] **Fast Convolutional Layer** (im2col integration).
+- [x] **Fast Upscaling** (Transposed Convolution).
+- [x] **End-to-End Simulation** (UNet 30-step pass).
+- [ ] **Weight Loading** (Parsing real model weights from .bin/.safetensors).
+- [ ] **Winograd 3x3 Kernels** (Advanced spatial optimization).
+
+## 🔨 Build Instructions
+```bash
+mingw32-make clean
+mingw32-make all
+./bin/sim-sd-full.exe
