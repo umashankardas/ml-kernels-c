@@ -1,5 +1,9 @@
 # ml-kernels-c 🧱
 
+**Tech Stack:** `C` | `AVX2 / SIMD` | `OpenMP` | `Matrix Calculus` | `HPC`
+
+---
+
 A collection of low-level AI/ML computational kernels written in C, focusing on hardware-aware design and performance optimization.
 
 ## 🎯 Goal
